@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Marks Splitter</title>
+</head>
+<style>
+    html{
+        background:url("back3.jpg") no-repeat center center fixed;
+        -webkit-background-size:cover;
+        -moz-background-size:cover;
+        -o-background-size:cover;
+        background-size:cover;
+    }
+</style>
+<body>
+
+    <table border="2" id="myTable" >
+        <th>S.No</th>
+        <th>Name</th>
+        <th>Total Marks</th>
+        <th>Obtained marks</th>
+        <th>Relavance of the subjects in the present context(5 marks)</th>
+        <th>literature Survey(5 marks)</th>
+        <th>Objectives of the project(10 marks)</th>
+		<th>Design specification and code content(20 marks)</th>
+		<th>Results demonstration of execution of the project(25 marks)</th>
+		<th>Conclusion and scope for future work(5 marks)</th>
+		<th>Overall presentation of thesis/ oral presentation(30 marks)</th>
+		<th>Project report writing(40 marks)</th>
+        <th>Add Row</th>
+        
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td id="ins_1"><input type="text" name="name" id="name_1" onkeydown="if(event.keyCode === 13)fixName(this.id)" placeholder="Student Name"  /></td>
+                <td>140</td>
+                <td id="in_1"><input type="number" name="marks" id="marks_1" placeholder="Marks" aria-placeholder="Marks" onkeyup="split(this.id);"/></td>
+                <td id="rel_1"></td>
+                <td id="lit_1"></td>
+                <td id="obj_1"></td>
+				<td id="des_1"></td>
+				<td id="res_1"></td>
+				<td id="con_1"></td>
+				<td id="ove_1"></td>
+				<td id="pro_1"></td>
+            </tr>
+            
+        </tbody>
+    </table>
+	
+	<button onclick="exportTableToExcel('myTable')"> Export Data to Excel</button>
+	
+
+    <script>
+	function exportTableToExcel(tableID, filename = ""){
+    var downloadLink;
+    var dataType = "application/vnd.ms-excel";
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, "%20");
+    
+    // Specify file name
+    filename = filename?filename+".xls":"excel_data.xls";
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(["\ufeff", tableHTML], {
+            type: dataType,
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = "data:" + dataType + ", " + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
+
+	
+        
+        let sno = 1;
+        let marks = [];
+        var content;
+        let a,b,c,d,e,f,g,h;
+        let flag = false;
+
+        function addingButton(){
+            var x = document.getElementById("myTable").rows.length;
+            if(x>2){
+            var t = document.getElementById("myTable").rows[x-2].deleteCell(12);
+            }
+            var xy = document.getElementById("myTable").rows[x-1];
+            let newCell= xy.insertCell(12);
+            newCell.innerHTML = "<td><button onclick='addrow();'>+</button></td>";
+        }
+        function fixName(clicked){
+            let id  = String(clicked).split("_")[1];
+            let name = document.getElementById(`name_${id}`).value;
+            document.getElementById(`ins_${id}`).innerHTML = name;
+        }
+       
+       function addrow(){
+
+           sno +=1;
+            var myHtmlContent = `
+            <tr>
+                <td>${sno}</td>
+                <td id="ins_${sno}"><input type="text" name="name" id="name_${sno}" onkeydown="if(event.keyCode ===13) fixName(this.id);" placeholder="Student Name" /></td>
+                <td>140</td>
+                <td id="in_${sno}"><input type="number" name="marks" id="marks_${sno}" placeholder="Marks" aria-placeholder="Marks" onkeyup="split(this.id);"/></td>
+                <td id="rel_${sno}"></td>
+                <td id="lit_${sno}"></td>
+                <td id="obj_${sno}"></td>
+				<td id="des_${sno}"></td>
+				<td id="res_${sno}"></td>
+				<td id="con_${sno}"></td>
+				<td id="ove_${sno}"></td>
+				<td id="pro_${sno}"></td>
+            </tr>
+            `;
+            var tableRef = document.getElementById("myTable").getElementsByTagName("tbody")[1];
+
+            var newRow = tableRef.insertRow(tableRef.rows.length);
+            newRow.innerHTML = myHtmlContent;
+            addingButton();
+        }
+
+        function randomInteger(min, max) {
+           return (Math.random() * (max - min + 1)) + min;
+        }
+        function splitUp(obtainedMarks){
+            a = randomInteger(1,4).toFixed(1);
+            b = randomInteger(1,4).toFixed(1);
+           c = randomInteger(3,9).toFixed(1);
+		    d = randomInteger(3,18.9).toFixed(1);
+			 e = randomInteger(3,23.9).toFixed(1);
+			  f = randomInteger(1,4).toFixed(1);
+			   g= randomInteger(4,28.9).toFixed(1);
+			    h = randomInteger(6,38.9).toFixed(1);
+            unEqualSplitter(obtainedMarks);
+        }
+
+        function unEqualSplitter(obtainedMarks){
+            if((Number(a)+Number(b)+Number(c)+Number(d)+Number(e)+Number(f)+Number(g)+Number(h)) === Number(obtainedMarks)){
+                flag =true;
+            }
+            else{
+                splitUp(obtainedMarks);
+            }
+        }
+        
+        function split(clicked) {
+            let id  = String(clicked).split("_")[1];
+            
+            let obtainedMarks = document.getElementById(`marks_${id}`).value;  
+            
+                if((obtainedMarks > 25 )&& (obtainedMarks<=140)){
+                if(marks.includes(obtainedMarks)){
+                    if(obtainedMarks==140)
+                    {
+                        marks.push(obtainedMarks);
+                 a = ((obtainedMarks * 5) / 140).toFixed(2);
+
+                 b = ((obtainedMarks * 5) / 140).toFixed(2);
+
+                 c = ((obtainedMarks * 10) / 140).toFixed(2);
+
+                 d = ((obtainedMarks * 20) / 140).toFixed(2);
+
+                 e = ((obtainedMarks * 25) / 140).toFixed(2);
+
+                 f = ((obtainedMarks * 5) / 140).toFixed(2);
+
+                 g = ((obtainedMarks * 30) / 140).toFixed(2);
+
+                 h = ((obtainedMarks * 40) / 140).toFixed(2);
+
+                    }
+                    else{
+                    splitUp(obtainedMarks);
+                    }
+                }
+                else{
+                marks.push(obtainedMarks);
+                 a = ((obtainedMarks * 5) / 140).toFixed(2);
+
+                 b = ((obtainedMarks * 5) / 140).toFixed(2);
+
+                 c = ((obtainedMarks * 10) / 140).toFixed(2);
+
+                 d = ((obtainedMarks * 20) / 140).toFixed(2);
+
+                 e = ((obtainedMarks * 25) / 140).toFixed(2);
+
+                 f = ((obtainedMarks * 5) / 140).toFixed(2);
+
+                 g = ((obtainedMarks * 30) / 140).toFixed(2);
+
+                 h = ((obtainedMarks * 40) / 140).toFixed(2);
+                }
+                document.getElementById(`rel_${id}`).innerHTML = a;
+                document.getElementById(`lit_${id}`).innerHTML = b;
+                document.getElementById(`obj_${id}`).innerHTML = c;
+				document.getElementById(`des_${id}`).innerHTML = d ;
+				document.getElementById(`res_${id}`).innerHTML = e;
+				document.getElementById(`con_${id}`).innerHTML = f;
+				document.getElementById(`ove_${id}`).innerHTML =g;
+				document.getElementById(`pro_${id}`).innerHTML = h;
+                document.getElementById(`in_${id}`).innerHTML = obtainedMarks;
+                
+            }
+        }
+        
+        addingButton();
+    </script>
+</body>
+</html>
